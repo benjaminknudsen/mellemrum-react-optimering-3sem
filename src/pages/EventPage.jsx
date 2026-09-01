@@ -12,10 +12,13 @@ export default function EventPage() {
   const [event, setEvent] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function getEvent() {
-      const response = await fetch(`${SUPABASE_URL}/events?id=eq.${eventId}`, { headers });
+      const response = await fetch(`${SUPABASE_URL}/events?select=*,venues(*)&id=eq.${eventId}`, { headers });
       const data = await response.json();
       setEvent(data[0]);
     }
@@ -25,7 +28,29 @@ export default function EventPage() {
 
   async function handleSubmit(eventSubmit) {
     eventSubmit.preventDefault();
-    console.log({ name, email, event: event.title });
+    setIsSubmitting(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch(`${SUPABASE_URL}/registrations`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ name, email, eventId: event.id, status: "Ny" })
+      });
+
+      if (!response.ok) {
+        throw new Error("Tilmeldingen kunne ikke gemmes");
+      }
+
+      setName("");
+      setEmail("");
+      setSuccessMessage("Din tilmelding er gemt.");
+    } catch {
+      setErrorMessage("Der opstod en fejl. Prøv igen.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   if (!event) {
@@ -56,14 +81,20 @@ export default function EventPage() {
               <p>
                 <strong>Sted</strong>
                 <span>
-                  {event.venueName}
-                  <br />
-                  {event.venueAddress}, {event.venuePostalCode} {event.venueCity}
-                  {event.venueWebsite && (
+                  {event.venues ? (
                     <>
+                      {event.venues.name}
                       <br />
-                      <a href={event.venueWebsite}>Besøg venue</a>
+                      {event.venues.address}, {event.venues.postalCode} {event.venues.city}
+                      {event.venues.website && (
+                        <>
+                          <br />
+                          <a href={event.venues.website}>Besøg venue</a>
+                        </>
+                      )}
                     </>
+                  ) : (
+                    "Sted ikke angivet"
                   )}
                 </span>
               </p>
@@ -86,15 +117,21 @@ export default function EventPage() {
           <form onSubmit={handleSubmit}>
             <label>
               Navn
-              <input value={name} onChange={(inputEvent) => setName(inputEvent.target.value)} />
+              <input required value={name} onChange={(inputEvent) => setName(inputEvent.target.value)} />
             </label>
             <span>E-mail</span>
             <input
+              required
+              type="email"
               value={email}
               onChange={(inputEvent) => setEmail(inputEvent.target.value)}
               placeholder="dig@example.com"
             />
-            <button type="submit">Tilmeld mig</button>
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Sender..." : "Tilmeld mig"}
+            </button>
+            {successMessage && <p role="status">{successMessage}</p>}
+            {errorMessage && <p role="alert">{errorMessage}</p>}
           </form>
         </section>
       </main>

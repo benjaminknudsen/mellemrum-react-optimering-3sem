@@ -10,13 +10,29 @@ const headers = {
 export default function RegistrationsPage() {
   const [registrations, setRegistrations] = useState([]);
   const [registrationCount, setRegistrationCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     async function getRegistrations() {
-      const response = await fetch(`${SUPABASE_URL}/registrations?order=createdAt.desc`, { headers });
-      const data = await response.json();
-      setRegistrations(data);
-      setRegistrationCount(data.length);
+      try {
+        const response = await fetch(
+          `${SUPABASE_URL}/registrations?select=*,events(*,venues(*))&order=createdAt.desc`,
+          { headers }
+        );
+
+        if (!response.ok) {
+          throw new Error("Tilmeldingerne kunne ikke hentes");
+        }
+
+        const data = await response.json();
+        setRegistrations(data);
+        setRegistrationCount(data.length);
+      } catch {
+        setErrorMessage("Der opstod en fejl. Tilmeldingerne kunne ikke hentes.");
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     getRegistrations();
@@ -31,23 +47,40 @@ export default function RegistrationsPage() {
       </header>
       <main>
         <div className="registration-list">
-          <div className="registration-row registration-labels">
-            <span>Navn</span>
-            <span>Event</span>
-            <span>Dato</span>
-            <span>Status</span>
-          </div>
-          {registrations.map((registration) => (
-            <div className="registration-row" key={registration.id}>
-              <div>
-                <strong>{registration.name}</strong>
-                <small>{registration.email}</small>
+          {isLoading ? (
+            <p role="status">Henter tilmeldinger...</p>
+          ) : errorMessage ? (
+            <p role="alert">{errorMessage}</p>
+          ) : registrations.length === 0 ? (
+            <p>Der er ingen tilmeldinger endnu.</p>
+          ) : (
+            <>
+              <div className="registration-row registration-labels">
+                <span>Navn</span>
+                <span>Event</span>
+                <span>Dato</span>
+                <span>Status</span>
               </div>
-              <span>{registration.eventTitle}</span>
-              <span>{new Date(registration.eventDate).toLocaleDateString("da-DK")}</span>
-              <span className="status">{registration.status}</span>
-            </div>
-          ))}
+              {registrations.map((registration) => (
+                <div className="registration-row" key={registration.id}>
+                  <div>
+                    <strong>{registration.name}</strong>
+                    <small>{registration.email}</small>
+                  </div>
+                  <div>
+                    <strong>{registration.events?.title ?? "Event ikke angivet"}</strong>
+                    <small>{registration.events?.venues?.name ?? "Sted ikke angivet"}</small>
+                  </div>
+                  <span>
+                    {registration.events?.date
+                      ? new Date(registration.events.date).toLocaleDateString("da-DK")
+                      : "Dato ikke angivet"}
+                  </span>
+                  <span className="status">{registration.status}</span>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </main>
       <footer className="site-footer">
