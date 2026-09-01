@@ -38,27 +38,35 @@ Gå derefter til **SQL Editor** i Supabase:
 
 ![SQL-koden indsat i Supabase SQL Editor](docs/images/setup/paste-sql-in-editor.webp)
 
-Hvis Supabase viser advarslen på billedet nedenfor, skal du vælge **Run without RLS** for denne starter.
+Hvis Supabase viser advarslen på billedet nedenfor, skal du vælge **Run without RLS** for at køre starteren. SQL-filen aktiverer selv RLS og opretter de policies, appen bruger.
 
 ![Supabase-advarsel med knappen Run without RLS](docs/images/setup/run-without-rls.webp)
 
 Det er et bevidst scopevalg i Case 1: Authentication og authorization indgår ikke, og den interne side skal derfor ikke adgangsbeskyttes. Brug kun de udleverede eller andre fiktive testdata – aldrig rigtige personoplysninger.
 
-SQL-filen opretter tabellerne `events` og `registrations` og indsætter de startdata, som appen forventer. Vent, til Supabase viser, at din query er gennemført.
+SQL-filen opretter tabellerne `venues`, `events` og `registrations` og indsætter de startdata, som appen forventer. Vent, til Supabase viser, at din query er gennemført.
+
+Datamodellen er relationel: Venue-information som navn, adresse, postnummer, by og website ligger i `venues`. Hvert event refererer til et venue gennem `events.venueId`, og hver tilmelding refererer til et event gennem `registrations.eventId`.
+
+```text
+venues ← events ← registrations
+```
+
+React-appen henter de relaterede data gennem Supabase REST API med nested selects. Når en bruger tilmelder sig, gemmes tilmeldingen i `registrations` sammen med det valgte events `eventId`.
 
 ### Kontrollér resultatet
 
-Åbn **Table Editor**, og vælg tabellen `events`. Du bør kunne se ni events.
+Åbn **Table Editor**, og kontrollér først, at venue-informationen findes i tabellen `venues`. Vælg derefter tabellen `events`. Her bør du kunne se ni events, som hver har et `venueId`.
 
 ![Events i Supabase Table Editor](docs/images/setup/table-events.webp)
 
-Vælg derefter tabellen `registrations`. Her bør du kunne se de to starttilmeldinger.
+Vælg til sidst tabellen `registrations`. Her bør du kunne se de to starttilmeldinger, som hver har et `eventId`.
 
 ![Tilmeldinger i Supabase Table Editor](docs/images/setup/table-registrations.webp)
 
-Du kan også åbne **Database → Schema Visualizer**. Her skal du kunne se tabellerne `events` og `registrations`. De har endnu ingen relation til hinanden; det er en del af udgangspunktet for casen. Bemærk også, at flere events bruger samme venue, men gentager `venueName`, `venueAddress`, `venuePostalCode`, `venueCity` og `venueWebsite` direkte på hvert event.
+Du kan også åbne **Database → Schema Visualizer**. Her skal du kunne se tabellerne `venues`, `events` og `registrations` samt relationerne `events.venueId → venues.id` og `registrations.eventId → events.id`.
 
-![Events og registrations i Supabase Schema Visualizer](docs/images/setup/schema-visualiser.webp)
+![Venues, events og registrations i Supabase Schema Visualizer](docs/images/setup/schema-visualiser.webp)
 
 ## 3. Forbind React-projektet til Supabase
 
@@ -111,7 +119,7 @@ Kontrollér, at:
 - du kan åbne en eventside
 - siden `/tilmeldinger` viser de eksisterende tilmeldinger
 
-Tilmeldingsformularen logger foreløbig de indtastede værdier i konsollen. Den gemmer endnu ikke tilmeldingen i Supabase.
+Tilmeldingsformularen gemmer en ny række i `registrations` med brugerens navn, e-mail, status og det valgte events `eventId`.
 
 ## 5. Deploy appen
 
@@ -131,7 +139,8 @@ Se den gennemgåede proces på Canvas: [Web App-forbedringer og teknisk fundamen
 
 ## Hvis appen ikke viser data
 
-- Kontrollér, at både `events` og `registrations` findes i Supabase.
+- Kontrollér, at `venues`, `events` og `registrations` findes i Supabase.
+- Kontrollér, at events har et gyldigt `venueId`, og at registrations har et gyldigt `eventId`.
 - Kontrollér, at API URL ender på `/rest/v1` uden en ekstra `/`.
 - Kontrollér, at du har kopieret din publishable key og ikke en secret key.
 - Genstart `npm run dev`, hvis du har ændret `.env`, mens serveren kørte.
