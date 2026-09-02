@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import EventPage from "./pages/EventPage";
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/tilmeldinger" element={<RegistrationsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <Footer />
     </>
   );
 }
