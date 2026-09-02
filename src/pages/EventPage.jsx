@@ -144,8 +144,9 @@ export default function EventPage() {
               Navn
               <input required value={name} onChange={(inputEvent) => setName(inputEvent.target.value)} />
             </label>
-            <span>E-mail</span>
+            <label className="email-label" htmlFor="registration-email">E-mail</label>
             <input
+              id="registration-email"
               required
               type="email"
               value={email}
