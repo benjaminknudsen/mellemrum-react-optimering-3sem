@@ -15,12 +15,29 @@ export default function EventPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     async function getEvent() {
-      const response = await fetch(`${SUPABASE_URL}/events?select=*,venues(*)&id=eq.${eventId}`, { headers });
-      const data = await response.json();
-      setEvent(data[0]);
+      setIsLoading(true);
+      setFetchError("");
+      setEvent(null);
+
+      try {
+        const response = await fetch(`${SUPABASE_URL}/events?select=*,venues(*)&id=eq.${eventId}`, { headers });
+
+        if (!response.ok) {
+          throw new Error("Eventet kunne ikke hentes");
+        }
+
+        const data = await response.json();
+        setEvent(data[0] ?? null);
+      } catch {
+        setFetchError("Der opstod en fejl. Eventet kunne ikke hentes.");
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     getEvent();
@@ -53,8 +70,16 @@ export default function EventPage() {
     }
   }
 
+  if (isLoading) {
+    return <main className="event-page"><p role="status">Henter event...</p></main>;
+  }
+
+  if (fetchError) {
+    return <main className="event-page"><p role="alert">{fetchError}</p></main>;
+  }
+
   if (!event) {
-    return null;
+    return <main className="event-page"><p>Eventet findes ikke.</p></main>;
   }
 
   const date = new Date(event.date);
