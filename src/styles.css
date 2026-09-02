@@ -617,7 +617,8 @@ select:focus {
   gap: 0.65rem;
 }
 
-.signup-panel form > span {
+.signup-panel form > .email-label {
+  display: block;
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.08em;
