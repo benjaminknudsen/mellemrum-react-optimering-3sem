@@ -121,19 +121,19 @@ export default function HomePage() {
           ) : (
             filteredEvents.map((event) => (
               <article className="event-card" key={event.id}>
-                <img src={event.image} alt="" />
-                <div className="event-card-content">
-                  <p className="event-category">{event.category}</p>
-                  <h3>{event.title}</h3>
-                  <p>{event.summary}</p>
-                  <div className="event-meta">
-                    <span>{formatEventDate(event.date)}</span>
-                    <span>{event.venues?.name ?? "Sted ikke angivet"}</span>
+                <Link className="event-card-link" to={`/events/${event.slug}`}>
+                  <img src={event.image} alt="" />
+                  <div className="event-card-content">
+                    <p className="event-category">{event.category}</p>
+                    <h3>{event.title}</h3>
+                    <p>{event.summary}</p>
+                    <div className="event-meta">
+                      <span>{formatEventDate(event.date)}</span>
+                      <span>{event.venues?.name ?? "Sted ikke angivet"}</span>
+                    </div>
+                    <span className="card-link">Læs mere</span>
                   </div>
-                  <Link className="card-link" to={`/events/${event.slug}`}>
-                    Læs mere
-                  </Link>
-                </div>
+                </Link>
               </article>
             ))
           )}
