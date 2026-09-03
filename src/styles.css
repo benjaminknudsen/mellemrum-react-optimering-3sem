@@ -694,6 +694,27 @@ select:focus {
   text-transform: uppercase;
 }
 
+.registration-sort-button {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+  text-transform: inherit;
+}
+
+.registration-sort-button:hover,
+.registration-sort-button:focus-visible {
+  color: var(--green);
+}
+
+.registration-sort-button:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
+
 .status {
   background: #dff3cc;
   border: 1px solid #b8d99c;

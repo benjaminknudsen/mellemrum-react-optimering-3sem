@@ -15,6 +15,7 @@ export default function RegistrationsPage() {
   const [statusError, setStatusError] = useState("");
   const [deletingRegistrationId, setDeletingRegistrationId] = useState(null);
   const [deleteError, setDeleteError] = useState("");
+  const [sortOrder, setSortOrder] = useState("date-desc");
 
   useEffect(() => {
     async function getRegistrations() {
@@ -99,6 +100,43 @@ export default function RegistrationsPage() {
     }
   }
 
+  const sortedRegistrations = [...registrations].sort((registrationA, registrationB) => {
+    if (sortOrder === "name-asc" || sortOrder === "name-desc") {
+      const comparison = (registrationA.name ?? "").localeCompare(registrationB.name ?? "", "da");
+      return sortOrder === "name-asc" ? comparison : -comparison;
+    }
+
+    if (sortOrder === "event-asc" || sortOrder === "event-desc") {
+      const eventA = registrationA.events?.title ?? "";
+      const eventB = registrationB.events?.title ?? "";
+      const comparison = eventA.localeCompare(eventB, "da");
+      return sortOrder === "event-asc" ? comparison : -comparison;
+    }
+
+    const dateA = Date.parse(registrationA.events?.date ?? "");
+    const dateB = Date.parse(registrationB.events?.date ?? "");
+
+    if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0;
+    if (Number.isNaN(dateA)) return 1;
+    if (Number.isNaN(dateB)) return -1;
+
+    return sortOrder === "date-asc" ? dateA - dateB : dateB - dateA;
+  });
+
+  function changeSort(field) {
+    setSortOrder((currentSortOrder) => {
+      if (currentSortOrder === `${field}-asc`) return `${field}-desc`;
+      if (currentSortOrder === `${field}-desc`) return `${field}-asc`;
+      return field === "date" ? "date-desc" : `${field}-asc`;
+    });
+  }
+
+  function sortIndicator(field) {
+    if (sortOrder === `${field}-asc`) return " ↑";
+    if (sortOrder === `${field}-desc`) return " ↓";
+    return "";
+  }
+
   return (
     <>
       <header className="admin-header">
@@ -119,12 +157,24 @@ export default function RegistrationsPage() {
               {statusError && <p role="alert">{statusError}</p>}
               {deleteError && <p role="alert">{deleteError}</p>}
               <div className="registration-row registration-labels">
-                <span>Navn</span>
-                <span>Event</span>
-                <span>Dato</span>
+                <span>
+                  <button className="registration-sort-button" type="button" onClick={() => changeSort("name")}>
+                    Navn{sortIndicator("name")}
+                  </button>
+                </span>
+                <span>
+                  <button className="registration-sort-button" type="button" onClick={() => changeSort("event")}>
+                    Event{sortIndicator("event")}
+                  </button>
+                </span>
+                <span>
+                  <button className="registration-sort-button" type="button" onClick={() => changeSort("date")}>
+                    Dato{sortIndicator("date")}
+                  </button>
+                </span>
                 <span>Status</span>
               </div>
-              {registrations.map((registration) => (
+              {sortedRegistrations.map((registration) => (
                 <div className="registration-row" key={registration.id}>
                   <div>
                     <strong>{registration.name}</strong>
