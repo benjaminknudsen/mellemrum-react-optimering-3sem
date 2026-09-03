@@ -254,6 +254,19 @@ select:focus {
   transform: translateY(-4px);
 }
 
+.event-card-link {
+  color: inherit;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.event-card-link:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: -3px;
+}
+
 .event-card img {
   aspect-ratio: 4 / 3;
   display: block;
