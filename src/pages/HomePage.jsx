@@ -38,7 +38,8 @@ export default function HomePage() {
   const categories = ["Alle", ...new Set(events.map((event) => event.category))];
 
   const filteredEvents = events.filter((event) => {
-    const searchText = `${event.title} ${event.summary} ${event.venues?.name ?? ""}`.toLowerCase();
+    const tagsText = Array.isArray(event.tags) ? event.tags.join(" ") : (event.tags ?? "");
+    const searchText = `${event.title} ${event.summary} ${event.category ?? ""} ${event.venues?.name ?? ""} ${tagsText}`.toLowerCase();
     const matchesSearch = searchText.includes(search.toLowerCase());
     const matchesCategory = category === "Alle" || event.category === category;
 
