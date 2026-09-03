@@ -8,7 +8,7 @@ const headers = {
 };
 
 export default function EventPage() {
-  const { eventId } = useParams();
+  const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,7 +25,10 @@ export default function EventPage() {
       setEvent(null);
 
       try {
-        const response = await fetch(`${SUPABASE_URL}/events?select=*,venues(*)&id=eq.${eventId}`, { headers });
+        const response = await fetch(
+          `${SUPABASE_URL}/events?select=*,venues(*)&slug=eq.${encodeURIComponent(slug)}`,
+          { headers }
+        );
 
         if (!response.ok) {
           throw new Error("Eventet kunne ikke hentes");
@@ -41,7 +44,7 @@ export default function EventPage() {
     }
 
     getEvent();
-  }, [eventId]);
+  }, [slug]);
 
   async function handleSubmit(eventSubmit) {
     eventSubmit.preventDefault();
