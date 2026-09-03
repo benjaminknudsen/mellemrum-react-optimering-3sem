@@ -78,6 +78,7 @@ export default function AboutPage() {
             <img
               src="https://images.unsplash.com/photo-1532370778713-1400f3d62094?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.1.0"
               alt="Moderne arkitektur med lyse facader og turkise altaner"
+              loading="lazy"
             />
             <figcaption>Byrum, arkitektur og nye perspektiver.</figcaption>
           </figure>
