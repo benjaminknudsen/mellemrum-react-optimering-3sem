@@ -98,6 +98,11 @@ export default function EventPage() {
         <section className="event-detail">
           <img
             src={getOptimizedUnsplashImage(event.image, 1400, 1200, 80)}
+            srcSet={`${getOptimizedUnsplashImage(event.image, 840, 720, 80)} 840w, ${getOptimizedUnsplashImage(event.image, 1400, 1200, 80)} 1400w`}
+            sizes="(max-width: 900px) calc(100vw - 2.5rem), min(55vw, 704px)"
+            width="1400"
+            height="1200"
+            fetchPriority="high"
             alt=""
           />
           <div className="event-detail-content">
