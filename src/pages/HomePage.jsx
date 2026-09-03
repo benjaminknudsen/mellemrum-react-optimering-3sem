@@ -130,7 +130,7 @@ export default function HomePage() {
                     <span>{formatEventDate(event.date)}</span>
                     <span>{event.venues?.name ?? "Sted ikke angivet"}</span>
                   </div>
-                  <Link className="card-link" to={`/events/${event.id}`}>
+                  <Link className="card-link" to={`/events/${event.slug}`}>
                     Læs mere
                   </Link>
                 </div>

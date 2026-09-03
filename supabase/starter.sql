@@ -34,10 +34,12 @@ create table if not exists public.events (
   category text,
   image text,
   price integer not null default 0,
+  slug text not null,
   "venueId" bigint not null
 );
 
 alter table public.events add column if not exists "venueId" bigint;
+alter table public.events add column if not exists slug text;
 alter table public.events drop column if exists "venueName";
 alter table public.events drop column if exists "venueAddress";
 alter table public.events drop column if exists "venuePostalCode";
@@ -45,17 +47,17 @@ alter table public.events drop column if exists "venueCity";
 alter table public.events drop column if exists "venueWebsite";
 
 insert into public.events
-  (id, title, summary, description, date, category, image, price, "venueId")
+  (id, title, summary, description, date, category, image, price, slug, "venueId")
 values
-  (1, 'Lyd mellem husene', 'En intim aften med nye elektroniske navne og visuelle installationer.', 'Oplev tre upcoming artister i et midlertidigt scenerum mellem Godsbanens værksteder. Aftenen kombinerer elektronisk musik, lys og korte artist talks.', '2026-09-12T19:30:00+02:00', 'Koncert', 'https://images.unsplash.com/photo-1562423426-934230877f7a?q=80&w=2525&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 120, 1),
-  (2, 'Byen efter mørke', 'En talk om lys, tryghed og de steder, vi deler efter solnedgang.', 'Arkitekter, designere og lokale beboere mødes til en samtale om, hvordan lys og byrumsdesign påvirker vores oplevelse af byen efter mørkets frembrud.', '2026-09-18T17:00:00+02:00', 'Talk', 'https://images.unsplash.com/photo-1562535375-d6ce64f58475?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 0, 2),
-  (3, 'Tryk din egen plakat', 'Workshop i analogt tryk med former, farver og typografi.', 'En praktisk workshop for begyndere. Du udvikler et enkelt motiv og trykker din egen A3-plakat. Materialer er inkluderet, og du behøver ingen erfaring.', '2026-09-26T10:00:00+02:00', 'Workshop', 'https://images.unsplash.com/photo-1777751006387-558bdf78a02e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 175, 3),
-  (4, 'Langbord og lokale råvarer', 'Fællesspisning med sæsonens grønt og historier fra producenterne.', 'Vi dækker langbord i gårdrummet og serverer en enkel menu baseret på lokale råvarer. Undervejs fortæller producenterne om råvarerne og arbejdet bag.', '2026-10-02T18:00:00+02:00', 'Fællesskab', 'https://plus.unsplash.com/premium_photo-1692200697697-52442fa20580?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 95, 4),
-  (5, 'Nye stemmer på scenen', 'Poetry slam, oplæsning og åbent mikrofonformat for nye skribenter.', 'En scene for korte tekster, spoken word og nye idéer. Aftenen begynder med inviterede oplæsere og slutter med åben mikrofon.', '2026-10-08T19:00:00+02:00', 'Scene', 'https://images.unsplash.com/photo-1561981898-9c83401e4cfd?q=80&w=3080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 60, 5),
-  (6, 'Tegn byen sammen', 'En rolig søndag med skitsebog, kaffe og fælles byrumsstudier.', 'Vi mødes ved Dokk1 og går en kort rute gennem midtbyen, mens vi tegner undervejs. Til sidst samler vi skitserne over kaffe og deler teknikker og observationer.', '2026-10-18T11:00:00+02:00', 'Workshop', 'https://images.unsplash.com/photo-1559070169-a3077159ee16?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 40, 2),
-  (7, 'Arkitekturvandring på Aarhus Ø', 'En guidet tur gennem bydelens markante bygninger og nye byrum.', 'Kom tæt på arkitekturen omkring havnen, og hør fortællingerne om materialer, fællesskab og livet mellem bygningerne.', '2026-10-24T13:00:00+02:00', 'Byvandring', 'https://images.unsplash.com/photo-1532370778713-1400f3d62094?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 75, 6),
-  (8, 'Keramik efter fyraften', 'En aften med ler, enkle teknikker og plads til at arbejde med hænderne.', 'Du lærer at forme en lille kop eller skål i hånden. Underviseren hjælper undervejs, og dit arbejde bliver glaseret og brændt efter workshoppen.', '2026-11-04T17:30:00+01:00', 'Workshop', 'https://images.unsplash.com/photo-1781389005078-d9e413d89c94?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 220, 1),
-  (9, 'Søndagsjazz ved åen', 'En eftermiddag med levende jazz, varme drikke og udsigt til byen.', 'En lokal kvartet spiller to korte sæt med både klassikere og nye kompositioner. Arrangementet foregår udendørs, hvis vejret tillader det.', '2026-11-15T14:00:00+01:00', 'Koncert', 'https://images.unsplash.com/photo-1569660437240-b27b957bf210?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 85, 7)
+  (1, 'Lyd mellem husene', 'En intim aften med nye elektroniske navne og visuelle installationer.', 'Oplev tre upcoming artister i et midlertidigt scenerum mellem Godsbanens værksteder. Aftenen kombinerer elektronisk musik, lys og korte artist talks.', '2026-09-12T19:30:00+02:00', 'Koncert', 'https://images.unsplash.com/photo-1562423426-934230877f7a?q=80&w=2525&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 120, 'lyd-mellem-husene', 1),
+  (2, 'Byen efter mørke', 'En talk om lys, tryghed og de steder, vi deler efter solnedgang.', 'Arkitekter, designere og lokale beboere mødes til en samtale om, hvordan lys og byrumsdesign påvirker vores oplevelse af byen efter mørkets frembrud.', '2026-09-18T17:00:00+02:00', 'Talk', 'https://images.unsplash.com/photo-1562535375-d6ce64f58475?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 0, 'byen-efter-moerke', 2),
+  (3, 'Tryk din egen plakat', 'Workshop i analogt tryk med former, farver og typografi.', 'En praktisk workshop for begyndere. Du udvikler et enkelt motiv og trykker din egen A3-plakat. Materialer er inkluderet, og du behøver ingen erfaring.', '2026-09-26T10:00:00+02:00', 'Workshop', 'https://images.unsplash.com/photo-1777751006387-558bdf78a02e?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 175, 'tryk-din-egen-plakat', 3),
+  (4, 'Langbord og lokale råvarer', 'Fællesspisning med sæsonens grønt og historier fra producenterne.', 'Vi dækker langbord i gårdrummet og serverer en enkel menu baseret på lokale råvarer. Undervejs fortæller producenterne om råvarerne og arbejdet bag.', '2026-10-02T18:00:00+02:00', 'Fællesskab', 'https://plus.unsplash.com/premium_photo-1692200697697-52442fa20580?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 95, 'langbord-og-lokale-raavarer', 4),
+  (5, 'Nye stemmer på scenen', 'Poetry slam, oplæsning og åbent mikrofonformat for nye skribenter.', 'En scene for korte tekster, spoken word og nye idéer. Aftenen begynder med inviterede oplæsere og slutter med åben mikrofon.', '2026-10-08T19:00:00+02:00', 'Scene', 'https://images.unsplash.com/photo-1561981898-9c83401e4cfd?q=80&w=3080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 60, 'nye-stemmer-paa-scenen', 5),
+  (6, 'Tegn byen sammen', 'En rolig søndag med skitsebog, kaffe og fælles byrumsstudier.', 'Vi mødes ved Dokk1 og går en kort rute gennem midtbyen, mens vi tegner undervejs. Til sidst samler vi skitserne over kaffe og deler teknikker og observationer.', '2026-10-18T11:00:00+02:00', 'Workshop', 'https://images.unsplash.com/photo-1559070169-a3077159ee16?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 40, 'tegn-byen-sammen', 2),
+  (7, 'Arkitekturvandring på Aarhus Ø', 'En guidet tur gennem bydelens markante bygninger og nye byrum.', 'Kom tæt på arkitekturen omkring havnen, og hør fortællingerne om materialer, fællesskab og livet mellem bygningerne.', '2026-10-24T13:00:00+02:00', 'Byvandring', 'https://images.unsplash.com/photo-1532370778713-1400f3d62094?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 75, 'arkitekturvandring-paa-aarhus-oe', 6),
+  (8, 'Keramik efter fyraften', 'En aften med ler, enkle teknikker og plads til at arbejde med hænderne.', 'Du lærer at forme en lille kop eller skål i hånden. Underviseren hjælper undervejs, og dit arbejde bliver glaseret og brændt efter workshoppen.', '2026-11-04T17:30:00+01:00', 'Workshop', 'https://images.unsplash.com/photo-1781389005078-d9e413d89c94?q=80&w=2400&auto=format&fit=crop&ixlib=rb-4.1.0', 220, 'keramik-efter-fyraften', 1),
+  (9, 'Søndagsjazz ved åen', 'En eftermiddag med levende jazz, varme drikke og udsigt til byen.', 'En lokal kvartet spiller to korte sæt med både klassikere og nye kompositioner. Arrangementet foregår udendørs, hvis vejret tillader det.', '2026-11-15T14:00:00+01:00', 'Koncert', 'https://images.unsplash.com/photo-1569660437240-b27b957bf210?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 85, 'soendagsjazz-ved-aaen', 7)
 on conflict (id) do update set
   title = excluded.title,
   summary = excluded.summary,
@@ -64,8 +66,14 @@ on conflict (id) do update set
   category = excluded.category,
   image = excluded.image,
   price = excluded.price,
+  slug = excluded.slug,
   "venueId" = excluded."venueId";
 
+alter table public.events alter column slug set not null;
+alter table public.events drop constraint if exists events_slug_unique;
+alter table public.events add constraint events_slug_unique unique (slug);
+alter table public.events drop constraint if exists events_slug_format;
+alter table public.events add constraint events_slug_format check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$');
 alter table public.events alter column "venueId" set not null;
 alter table public.events drop constraint if exists "events_venueId_fkey";
 alter table public.events

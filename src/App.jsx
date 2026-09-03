@@ -15,7 +15,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/events/:eventId" element={<EventPage />} />
+        <Route path="/events/:slug" element={<EventPage />} />
         <Route path="/om" element={<AboutPage />} />
         <Route path="/tilmeldinger" element={<RegistrationsPage />} />
         <Route path="*" element={<NotFoundPage />} />
