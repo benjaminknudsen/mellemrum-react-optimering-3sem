@@ -48,11 +48,6 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_APIKEY: ${{ vars.VITE_SUPABASE_APIKEY }}
 
-      # Copy index.html to 404.html for SPA routing
-      # This ensures React Router works on GitHub Pages
-      - name: Copy index.html to 404.html for SPA routing
-        run: cp ./dist/index.html ./dist/404.html
-
       # Configure GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v6
