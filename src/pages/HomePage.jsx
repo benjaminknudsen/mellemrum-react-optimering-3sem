@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { getOptimizedUnsplashImage } from "../imageUtils";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const headers = {
@@ -122,7 +123,11 @@ export default function HomePage() {
             filteredEvents.map((event) => (
               <article className="event-card" key={event.id}>
                 <Link className="event-card-link" to={`/events/${event.slug}`}>
-                  <img src={event.image} alt="" />
+                  <img
+                    src={getOptimizedUnsplashImage(event.image, 900, 675)}
+                    alt=""
+                    loading="lazy"
+                  />
                   <div className="event-card-content">
                     <p className="event-category">{event.category}</p>
                     <h3>{event.title}</h3>
