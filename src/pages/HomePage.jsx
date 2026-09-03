@@ -13,6 +13,7 @@ export default function HomePage() {
   const [category, setCategory] = useState("Alle");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [retryAttempt, setRetryAttempt] = useState(0);
 
   useEffect(() => {
     async function getEvents() {
@@ -33,7 +34,13 @@ export default function HomePage() {
     }
 
     getEvents();
-  }, []);
+  }, [retryAttempt]);
+
+  function retryEvents() {
+    setErrorMessage("");
+    setIsLoading(true);
+    setRetryAttempt((currentAttempt) => currentAttempt + 1);
+  }
 
   const categories = ["Alle", ...new Set(events.map((event) => event.category))];
 
@@ -103,7 +110,12 @@ export default function HomePage() {
           {isLoading ? (
             <p role="status">Henter events...</p>
           ) : errorMessage ? (
-            <p role="alert">{errorMessage}</p>
+            <div role="alert">
+              <p>{errorMessage}</p>
+              <button className="retry-button" type="button" onClick={retryEvents}>
+                Prøv igen
+              </button>
+            </div>
           ) : filteredEvents.length === 0 ? (
             <p>{events.length === 0 ? "Der er ingen kommende events." : "Ingen events matcher din søgning."}</p>
           ) : (
