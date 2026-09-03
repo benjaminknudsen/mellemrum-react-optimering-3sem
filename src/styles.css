@@ -215,6 +215,28 @@ select:focus {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.retry-button {
+  background: var(--green);
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+}
+
+.retry-button:hover,
+.retry-button:focus-visible {
+  background: #245c4d;
+}
+
+.retry-button:focus-visible {
+  outline: 3px solid rgba(23, 63, 53, 0.2);
+  outline-offset: 2px;
+}
+
 .event-card {
   background: white;
   border: 1px solid var(--line);

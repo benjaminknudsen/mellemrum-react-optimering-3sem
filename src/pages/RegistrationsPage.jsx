@@ -16,6 +16,7 @@ export default function RegistrationsPage() {
   const [deletingRegistrationId, setDeletingRegistrationId] = useState(null);
   const [deleteError, setDeleteError] = useState("");
   const [sortOrder, setSortOrder] = useState("date-desc");
+  const [retryAttempt, setRetryAttempt] = useState(0);
 
   useEffect(() => {
     async function getRegistrations() {
@@ -40,7 +41,13 @@ export default function RegistrationsPage() {
     }
 
     getRegistrations();
-  }, []);
+  }, [retryAttempt]);
+
+  function retryRegistrations() {
+    setErrorMessage("");
+    setIsLoading(true);
+    setRetryAttempt((currentAttempt) => currentAttempt + 1);
+  }
 
   async function updateStatus(registrationId, status) {
     setUpdatingRegistrationId(registrationId);
@@ -149,7 +156,12 @@ export default function RegistrationsPage() {
           {isLoading ? (
             <p role="status">Henter tilmeldinger...</p>
           ) : errorMessage ? (
-            <p role="alert">{errorMessage}</p>
+            <div role="alert">
+              <p>{errorMessage}</p>
+              <button className="retry-button" type="button" onClick={retryRegistrations}>
+                Prøv igen
+              </button>
+            </div>
           ) : registrations.length === 0 ? (
             <p>Der er ingen tilmeldinger endnu.</p>
           ) : (
