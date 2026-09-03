@@ -544,6 +544,7 @@ select:focus {
 
 .event-page {
   max-width: 1280px;
+  min-height: calc(100vh - 80px);
 }
 
 .back-link {
