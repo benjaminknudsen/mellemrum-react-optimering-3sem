@@ -75,22 +75,34 @@ export default function EventPage() {
   }
 
   if (isLoading) {
-    return <main className="event-page"><p role="status">Henter event...</p></main>;
+    return (
+      <main id="main-content" className="event-page" tabIndex={-1}>
+        <p role="status">Henter event...</p>
+      </main>
+    );
   }
 
   if (fetchError) {
-    return <main className="event-page"><p role="alert">{fetchError}</p></main>;
+    return (
+      <main id="main-content" className="event-page" tabIndex={-1}>
+        <p role="alert">{fetchError}</p>
+      </main>
+    );
   }
 
   if (!event) {
-    return <main className="event-page"><p>Eventet findes ikke.</p></main>;
+    return (
+      <main id="main-content" className="event-page" tabIndex={-1}>
+        <p>Eventet findes ikke.</p>
+      </main>
+    );
   }
 
   const date = new Date(event.date);
 
   return (
     <>
-      <main className="event-page">
+      <main id="main-content" className="event-page" tabIndex={-1}>
         <Link className="back-link" to="/">
           ← Alle events
         </Link>

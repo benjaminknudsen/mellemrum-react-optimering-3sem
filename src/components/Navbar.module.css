@@ -44,6 +44,12 @@
   color: white;
 }
 
+.brand:focus-visible,
+.navLinks a:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
+}
+
 @media (max-width: 620px) {
   .siteNav {
     align-items: flex-start;

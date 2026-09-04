@@ -10,7 +10,7 @@ export default function AboutPage() {
           <p>Udvalgte kulturoplevelser og nye perspektiver på Aarhus.</p>
         </div>
       </header>
-      <main className="about-page">
+      <main id="main-content" className="about-page" tabIndex={-1}>
         <section className="about-intro" aria-labelledby="about-intro-title">
           <div>
             <p className="eyebrow dark">Idéen</p>

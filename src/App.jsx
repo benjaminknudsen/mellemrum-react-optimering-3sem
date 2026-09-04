@@ -12,6 +12,9 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
+      <a className="skip-link" href="#main-content">
+        Spring til hovedindhold
+      </a>
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
