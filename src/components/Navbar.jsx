@@ -1,10 +1,18 @@
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
+  const { pathname } = useLocation();
+
+  function handleBrandClick() {
+    if (pathname === "/") {
+      window.scrollTo(0, 0);
+    }
+  }
+
   return (
     <nav className={styles.siteNav}>
-      <NavLink className={styles.brand} to="/">
+      <NavLink className={styles.brand} to="/" onClick={handleBrandClick}>
         mellemrum<span>.</span>
       </NavLink>
       <div className={styles.navLinks}>
