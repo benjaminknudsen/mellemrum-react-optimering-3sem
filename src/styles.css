@@ -42,6 +42,25 @@ select {
   font: inherit;
 }
 
+.skip-link {
+  background: var(--lime);
+  color: var(--green);
+  font-weight: 800;
+  left: var(--page-gutter);
+  padding: 0.75rem 1rem;
+  position: fixed;
+  top: 0;
+  transform: translateY(-120%);
+  transition: transform 160ms ease;
+  z-index: 20;
+}
+
+.skip-link:focus {
+  outline: 3px solid white;
+  outline-offset: 2px;
+  transform: translateY(0);
+}
+
 .hero {
   background:
     linear-gradient(90deg, rgba(12, 42, 34, 0.92) 0%, rgba(12, 42, 34, 0.7) 52%, rgba(12, 42, 34, 0.28) 100%),
@@ -630,6 +649,11 @@ select:focus {
 .signup-panel button:disabled {
   cursor: wait;
   opacity: 0.65;
+}
+
+.signup-panel button:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
 }
 
 .form-message {

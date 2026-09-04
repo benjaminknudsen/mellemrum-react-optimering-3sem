@@ -151,7 +151,7 @@ export default function RegistrationsPage() {
         <h1>Tilmeldinger</h1>
         <p>{registrationCount} tilmeldinger i alt</p>
       </header>
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <div className="registration-list">
           {isLoading ? (
             <p role="status">Henter tilmeldinger...</p>

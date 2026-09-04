@@ -73,12 +73,12 @@ export default function HomePage() {
         <p className="hero-copy">
           Koncerter, talks og workshops samlet ét sted. Find dit næste event, og tilmeld dig på få minutter.
         </p>
-        <a className="hero-link" href="#events">
+        <a className="hero-link" href="#main-content">
           Se kommende events ↓
         </a>
       </header>
 
-      <main id="events">
+      <main id="main-content" tabIndex={-1}>
         <section className="section-heading">
           <div>
             <p className="eyebrow dark">Det sker</p>
